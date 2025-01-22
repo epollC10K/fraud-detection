@@ -1,0 +1,95 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  labels:
+    app: fraud-detection
+  name: fraud-detection
+  namespace: fraud-detection
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fraud-detection
+  template:
+    metadata:
+      labels:
+        app: fraud-detection
+    spec:
+      containers:
+        - name: fraud-detection
+          image: fraud-detection:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+            - containerPort: 8080
+              protocol: TCP
+          resources:
+            requests:
+              cpu: '1'
+              memory: 2Gi
+            limits:
+              cpu: '2'
+              memory: 4Gi
+#          env:
+#            - name: APP_ENV
+#              value: 'prod'
+#            - name: DB_USER
+#              valueFrom:
+#                secretKeyRef:
+#                  name: gk-data-secret
+#                  key: DB_USER
+#            - name: DB_PASSWD
+#              valueFrom:
+#                secretKeyRef:
+#                  name: gk-data-secret
+#                  key: DB_PASSWD
+#          livenessProbe:
+#            httpGet:
+#              scheme: HTTP
+#              path: /actuator/health
+#              port: 8080
+#            initialDelaySeconds: 30
+#            timeoutSeconds: 3
+#            successThreshold: 1
+#            failureThreshold: 3
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: fraud-detection
+  annotations:
+    prometheus.io/port: "8088"
+    prometheus.io/jvm: "true"
+  name: fraud-detection
+  namespace: fraud-detection-prod
+spec:
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+#    - name: jvm-metrics
+#      port: 8088
+#      targetPort: 8088
+  type: ClusterIP
+  selector:
+    app: fraud-detection
+
+# 自动扩容
+#---
+#apiVersion: autoscaling/v1
+#kind: HorizontalPodAutoscaler
+#metadata:
+#  name: fraud-detection
+#  namespace: fraud-detection-prod
+#spec:
+#  maxReplicas: 3
+#  minReplicas: 1
+#  scaleTargetRef:
+#    apiVersion: apps/v1
+#    kind: Deployment
+#    name: fraud-detection
+#  targetCPUUtilizationPercentage: 80
