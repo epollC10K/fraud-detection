@@ -4,6 +4,8 @@
 - 目前告警是通过邮件发送，所以配置的我的邮箱，注意修改application.properties邮箱配置，否则收不到邮件
 - 在开发的电脑上docker能正常跑起来，需要注意修改application.properties中bootstrap-servers值
 - 由于电脑装的k8s有点问题，所以只写了yaml文件文件，未验证；
+- 本次代码的设计及测试用例见：HSBC homework.pdf；
+- 有三个操作视频，每次操作内容见标题
 
 
 - 打包命令
