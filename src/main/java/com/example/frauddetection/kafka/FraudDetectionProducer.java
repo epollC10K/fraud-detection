@@ -1,6 +1,7 @@
 package com.example.frauddetection.kafka;
 
 import com.example.frauddetection.dto.TransactionDTO;
+import com.example.frauddetection.util.AWSCloudWatchLogger;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Service;
 public class FraudDetectionProducer {
     @Autowired
     private KafkaTemplate<String, TransactionDTO> kafkaTemplate;
+
+    AWSCloudWatchLogger logger = new AWSCloudWatchLogger();
 
     @Value("${spring.kafka.topic}")
     private String topic;

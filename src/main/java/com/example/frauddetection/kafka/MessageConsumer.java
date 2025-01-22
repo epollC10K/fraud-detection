@@ -2,6 +2,7 @@ package com.example.frauddetection.kafka;
 
 import com.example.frauddetection.exception.ParaErrException;
 import com.example.frauddetection.service.FraudDetectionRetryService;
+import com.example.frauddetection.util.AWSCloudWatchLogger;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -42,6 +43,8 @@ public abstract class MessageConsumer {
 
     @Autowired
     private FraudDetectionRetryService fraudDetectionRetryService;
+
+    AWSCloudWatchLogger logger = new AWSCloudWatchLogger();
 
     @PostConstruct
     public void init() {

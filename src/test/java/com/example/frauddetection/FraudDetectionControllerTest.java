@@ -72,12 +72,12 @@ public class FraudDetectionControllerTest {
         repository.save(entity);
 
         String json = "{\"transactionId\":\"transactionId402\"}";
-        mockMvc.perform(MockMvcRequestBuilders.post("/query")
+        mockMvc.perform(MockMvcRequestBuilders.post("/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content()
-                        .string("result pass"));
+                        .string("transactionId: transactionId402 pass"));
     }
 
     @Test
@@ -88,6 +88,6 @@ public class FraudDetectionControllerTest {
                         .content(json))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content()
-                        .string("result unknown"));
+                        .string("transactionId: transactionId403 not exist"));
     }
 }

@@ -3,6 +3,7 @@ package com.example.frauddetection.kafka;
 import com.example.frauddetection.dto.TransactionDTO;
 import com.example.frauddetection.exception.ParaErrException;
 import com.example.frauddetection.service.FraudDetectionService;
+import com.example.frauddetection.util.AWSCloudWatchLogger;
 import com.example.frauddetection.util.EmailNotify;
 import com.google.common.util.concurrent.RateLimiter;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,8 @@ public class FraudDetectionConsumer  extends MessageConsumer {
     @Value("${spring.fraud.detect.sendAlert.threadPool.num}")
     private String sendAlertTheadPoolNum;
     private ExecutorService sendAlertThreadPool;
+
+    AWSCloudWatchLogger logger = new AWSCloudWatchLogger();
 
     private RateLimiter transLimiter = RateLimiter.create(2);
 

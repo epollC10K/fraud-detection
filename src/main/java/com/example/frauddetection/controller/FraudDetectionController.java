@@ -4,6 +4,7 @@ import com.example.frauddetection.Enum.StatEnum;
 import com.example.frauddetection.dto.TransactionDTO;
 import com.example.frauddetection.kafka.FraudDetectionProducer;
 import com.example.frauddetection.service.FraudDetectionService;
+import com.example.frauddetection.util.AWSCloudWatchLogger;
 import com.google.common.util.concurrent.RateLimiter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ public class FraudDetectionController {
     private FraudDetectionProducer producer;
     @Autowired
     private FraudDetectionService fraudDetectionService;
+
+    AWSCloudWatchLogger logger = new AWSCloudWatchLogger();
 
     private RateLimiter transLimiter = RateLimiter.create(10); // Allow 10 requests per second
 
@@ -49,9 +52,11 @@ public class FraudDetectionController {
             Integer result = fraudDetectionService.queryFraudDetectResultByTransactionId(transactionDTO.getTransactionId());
             String  sResult = "";
             if (Objects.isNull(result)) {
-                sResult = "result unknown";
+                sResult = "transactionId: " + transactionDTO.getTransactionId() + " not exist";
             } else {
-                sResult = StatEnum.PASS.getStat().equals(result) ? "result pass" : "result reject";
+                sResult = StatEnum.PASS.getStat().equals(result)
+                        ? "transactionId: "+ transactionDTO.getTransactionId() + " pass"
+                        : "transactionId: "+ transactionDTO.getTransactionId() + " reject" ;
             }
             return ResponseEntity.ok(sResult);
         } else {
