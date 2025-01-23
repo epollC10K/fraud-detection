@@ -9,6 +9,7 @@ import com.example.frauddetection.repository.FraudDetectRepository;
 import com.example.frauddetection.repository.FraudDetectRetryRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -57,7 +58,7 @@ public class FraudDetectionRetryService {
     /**
      * 1分钟跑一次，取数条件：状态为INIT、不超过最大次数（10次），updatedAt一个小时以前
     */
-    //@Scheduled(fixedRate = 600000)
+    @Scheduled(fixedRate = 600000)
     public void doRetry() {
         Long updatedAtPos = System.currentTimeMillis() - 3600*1000;
         List<FraudDetectRetryEntity> retryEntities = retryRepository.findFraudDetectRetryEntitiesByRetryStatEqualsAndRetryTimesLessThanAndUpdatedAtGreaterThan(
